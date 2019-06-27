@@ -112,7 +112,6 @@ class PostPrice
         $postfields['btnnext'] = 'مرحله بعد';
         curl_setopt($ch, CURLOPT_POSTFIELDS, array_merge($postfields, self::getFormValues($response)));
         $response = curl_exec($ch);
-        curl_setopt($ch, CURLOPT_POST, true);
         $postfields = [];
         foreach (['sender_postal_code', 'receiver_postal_code'] as $key) {
             if (isset($input[$key])) {
