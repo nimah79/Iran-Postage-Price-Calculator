@@ -1,2 +1,2 @@
-# Iran-Postage-Price-Calculator
+# Iran Postage Price Calculator
 Simple wrapper for parcelprice.post.ir
