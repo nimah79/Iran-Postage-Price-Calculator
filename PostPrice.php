@@ -8,10 +8,8 @@
  * By NimaH79
  * http://nimah79.ir.
  */
-
 class PostPrice
 {
-
     private static $cookie_file = __DIR__.'/post_cookies.txt';
     private static $url = 'http://parcelprice.post.ir/default.aspx';
     private static $form_values = [
@@ -19,59 +17,59 @@ class PostPrice
         '__EVENTARGUMENT',
         '__LASTFOCUS',
         '__VIEWSTATE',
-        '__EVENTVALIDATION'
+        '__EVENTVALIDATION',
     ];
 
     private static $default_values = [
         'service_type' => [
-            'vizhe' => 'rdoSPS',
-            'pishtaz' => 'rdoEMS',
-            'sefareshi' => 'rdoEXP'
+            'vizhe'     => 'rdoSPS',
+            'pishtaz'   => 'rdoEMS',
+            'sefareshi' => 'rdoEXP',
         ],
         'product_type' => [
-            'pakat' => 'rdoLetter',
-            'baste' => 'rdoPackage',
+            'pakat'  => 'rdoLetter',
+            'baste'  => 'rdoPackage',
             'amanat' => 'rdoConsign',
             'kise_m' => 'rdoMPackage',
-            'matbou' => 'rdoNewsLetter'
+            'matbou' => 'rdoNewsLetter',
         ],
-        'weight' => 'txtWeight',
+        'weight'                => 'txtWeight',
         'special_delivery_time' => [
-            'today_22' => 'rdoSPS22',
+            'today_22'    => 'rdoSPS22',
             'tomorrow_10' => 'rdoSPS10',
-            'tomorrow_12' => 'rdoSPS12'
+            'tomorrow_12' => 'rdoSPS12',
         ],
         'destination_type' => [
-            'shahri' => 'rdoCity',
-            'beyn_shahri' => 'rdoBetweenCity'
+            'shahri'      => 'rdoCity',
+            'beyn_shahri' => 'rdoBetweenCity',
         ],
-        'send_method' => 'cboSendMethod',
-        'origin_state' => 'cboFromState',
-        'origin_city' => 'cboFromCity',
-        'destination_country' => 'cboToCountry',
-        'destination_state' => 'cboToState',
-        'destination_city' => 'cboToCity',
-        'sender_postal_code' => 'chkSenderPCode',
+        'send_method'          => 'cboSendMethod',
+        'origin_state'         => 'cboFromState',
+        'origin_city'          => 'cboFromCity',
+        'destination_country'  => 'cboToCountry',
+        'destination_state'    => 'cboToState',
+        'destination_city'     => 'cboToCity',
+        'sender_postal_code'   => 'chkSenderPCode',
         'receiver_postal_code' => 'chkReceiverPCode',
-        'insurance_type' => 'cboInsurType',
-        'insurance_amount' => 'txtInsurAmount',
-        'extra' => [
-            'agahi' => 'chkTwoReceipt',
-            'shekastani' => 'chkIsBreakable',
-            'express' => 'chkExpress',
-            'agahi_electronic' => 'chkElecTwoReceipt',
-            'mayeat' => 'chkIsLiquid',
-            'amanat_anbouh' => 'chkBulkConsign',
-            'cot' => 'chkIsCOT',
+        'insurance_type'       => 'cboInsurType',
+        'insurance_amount'     => 'txtInsurAmount',
+        'extra'                => [
+            'agahi'              => 'chkTwoReceipt',
+            'shekastani'         => 'chkIsBreakable',
+            'express'            => 'chkExpress',
+            'agahi_electronic'   => 'chkElecTwoReceipt',
+            'mayeat'             => 'chkIsLiquid',
+            'amanat_anbouh'      => 'chkBulkConsign',
+            'cot'                => 'chkIsCOT',
             'shenase_electronic' => 'chkElectronicDue',
-            'sms' => 'chkSMS',
+            'sms'                => 'chkSMS',
         ],
-        'post_devilery_time' => 'DropDown_extra'
+        'post_devilery_time' => 'DropDown_extra',
     ];
 
     private static $form_keys = [
         'service_type' => 'g1',
-        'product_type' => 'g2'
+        'product_type' => 'g2',
     ];
 
     private static $obligated_form_keys = [
@@ -79,7 +77,7 @@ class PostPrice
         'product_type',
         'weight',
         'insurance_type',
-        'post_devilery_time'
+        'post_devilery_time',
     ];
 
     public static function calculatePrice($input)
@@ -125,6 +123,7 @@ class PostPrice
             foreach (['origin_state', 'origin_city', 'destination_state', 'destination_city'] as $key) {
                 if (!isset($input[$key])) {
                     curl_close($ch);
+
                     return false;
                 }
                 $postfields[self::$default_values[$key]] = (string) $input[$key];
@@ -140,6 +139,7 @@ class PostPrice
             $response = curl_exec($ch);
             if (!isset($input['destination_country'])) {
                 curl_close($ch);
+
                 return false;
             }
             $postfields['btnnext'] = 'مرحله بعد';
@@ -150,6 +150,7 @@ class PostPrice
             foreach (['origin_state', 'origin_city'] as $key) {
                 if (!isset($input[$key])) {
                     curl_close($ch);
+
                     return false;
                 }
                 $postfields[self::$default_values[$key]] = (string) $input[$key];
@@ -188,20 +189,22 @@ class PostPrice
         $total = str_replace(',', '', $total[1]) / 10;
         $result['total'] = $total;
         preg_match_all('/<td.*?>\s+<span id=".*?>(<font.*?>)?(.*?):(<\/font>)?<\/span>\s+<\/td>\s+<td style.*?>\s+<input name=".*?" type="text" value="(.*?)" readonly="readonly" id=".*?" \/>\s+ریال\s+</', $response, $prices);
-        for($i = 0; $i < count($prices[4]); $i++) {
+        for ($i = 0; $i < count($prices[4]); $i++) {
             $result[$prices[2][$i]] = str_replace(',', '', $prices[4][$i]) / 10;
         }
 
         return $result;
     }
 
-    private static function getFormValues($page) {
+    private static function getFormValues($page)
+    {
         $result = [];
         foreach (self::$form_values as $key) {
             if (preg_match('/name="'.$key.'" id="'.$key.'" value="(.*?)"/', $page, $value)) {
                 $result[$key] = $value[1];
             }
         }
+
         return $result;
     }
 
@@ -211,5 +214,4 @@ class PostPrice
             unlink(self::$cookie_file);
         }
     }
-
 }
